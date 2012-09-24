@@ -2,6 +2,10 @@
 
 [Orchard](http://www.orchardproject.net/) is a community driven content management system that allows users to rapidly create websites for the .NET platform.
 
+## How it works
+
+This [blog post](http://peterkeating.co.uk/active-directory-authorization-module-for-orchard/) contains more detail about why we built the module and how it works.
+
 ## Status
 
 Currently the module is under development & testing. Feel free to use it and let us know any feedback or problems in the issues section of this project.
