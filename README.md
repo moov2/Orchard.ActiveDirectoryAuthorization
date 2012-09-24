@@ -4,7 +4,7 @@
 
 ## Status
 
-Currently the module is under testing and a download will be provided soon. Feel free to download the source code and build the module yourself though if you want to use this module right now.
+Currently the module is under development & testing. Feel free to use it and let us know any feedback or problems in the issues section of this project.
 
 ## Installation
 
