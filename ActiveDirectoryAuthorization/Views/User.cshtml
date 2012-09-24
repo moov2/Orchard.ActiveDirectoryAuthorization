@@ -1,0 +1,11 @@
+﻿<div class="user-display">
+    <div class="user-actions welcome">
+        Logged in as: <strong>@Context.User.Identity.Name</strong>
+    </div>
+
+    @if (AuthorizedFor(Orchard.Security.StandardPermissions.AccessAdminPanel)) {
+        <div class="user-actions">
+            @Html.ActionLink(T("Dashboard").ToString(), "Index", new {Area = "Dashboard", Controller = "Admin"})
+        </div>
+    }
+</div>

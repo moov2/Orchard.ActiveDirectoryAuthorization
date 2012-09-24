@@ -1,0 +1,13 @@
+﻿Name: ActiveDirectoryAuthorization
+AntiForgery: enabled
+Author: Moov2
+Website: http://moov2.com
+Version: 1.0
+OrchardVersion: 1.5
+Description: Handles the authorization to use the website and its admin areas using the current logged in active directory user.
+Features:
+    ActiveDirectoryAuthorization:
+        Name: Active Directory Authorization
+        FeatureDescription: Handles the authorization to use the website and its admin areas using the current logged in active directory user.
+        Category: Active Directory
+        Dependencies: Orchard.Users, Orchard.Roles
