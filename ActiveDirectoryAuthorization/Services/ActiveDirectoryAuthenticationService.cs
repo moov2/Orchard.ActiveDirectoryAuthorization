@@ -1,12 +1,7 @@
-﻿using System;
-using System.Web;
+﻿using System.Web;
 using ActiveDirectoryAuthorization.Models;
-using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
-using Orchard.Mvc;
 using Orchard.Security;
-using Orchard.Security.Providers;
-using Orchard.Services;
 
 namespace ActiveDirectoryAuthorization.Services
 {

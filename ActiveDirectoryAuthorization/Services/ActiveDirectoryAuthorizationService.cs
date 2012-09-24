@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Roles.Models;
 using Orchard.Security;
 using Orchard.Security.Permissions;
-using Orchard.Environment.Extensions;
 using ActiveDirectoryAuthorization.Models;
 using Orchard.Roles.Services;
 using Orchard;
-using Orchard.Users.Services;
-using Orchard.Services;
-using Orchard.Messaging.Services;
-using Orchard.Users.Events;
+using Orchard.Environment.Extensions;
 
 namespace ActiveDirectoryAuthorization.Services
 {

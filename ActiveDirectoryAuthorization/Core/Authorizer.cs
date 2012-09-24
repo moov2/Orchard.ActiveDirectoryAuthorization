@@ -4,7 +4,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web.Security;
 using ActiveDirectoryAuthorization.Models;
-using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
@@ -12,11 +11,6 @@ using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.UI.Notify;
 using Orchard.Users.Models;
-using Orchard.Logging;
-using Orchard.Users.Events;
-using Orchard.Messaging.Services;
-using System.Collections.Generic;
-using Orchard.Services;
 
 namespace ActiveDirectoryAuthorization.Core
 {
