@@ -2,6 +2,10 @@
 
 [Orchard](http://www.orchardproject.net/) is a community driven content management system that allows users to rapidly create websites for the .NET platform.
 
+## Status
+
+Currently the module is under testing and a download will be provided soon. Feel free to download the source code and build the module yourself though if you want to use this module right now.
+
 ## Installation
 
 In order to install the module follow the steps below.
