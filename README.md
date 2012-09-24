@@ -16,5 +16,6 @@ In order to install the module follow the steps below.
 	To do this you should open IIS and navigate to your website. Select the "Authentication" option, then enable "Windows Authentication", and have the rest as disabled.
 
 * The final step is to change the authentication configuration in the Web.config of the root of your website, replacing the current configuration to use FormsAuthentication.
+
     <authentication mode="Windows" />
     <roleManager enabled="true" defaultProvider="AspNetWindowsTokenRoleProvider"/>
