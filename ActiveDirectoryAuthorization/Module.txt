@@ -4,10 +4,10 @@ Author: Moov2
 Website: https://github.com/moov2/Orchard.ActiveDirectoryAuthorization
 Version: 1.0
 OrchardVersion: 1.5
-Description: Handles the authorization to use the website and its admin areas using the current logged in active directory user.
+Description: Overrides default authorization & authentication by using the currently logged in active directory user.
 Features:
     ActiveDirectoryAuthorization:
         Name: Active Directory Authorization
-        FeatureDescription: Handles the authorization to use the website and its admin areas using the current logged in active directory user.
+        FeatureDescription: Overrides default authorization & authentication by using the currently logged in active directory user.
         Category: Active Directory
         Dependencies: Orchard.Users, Orchard.Roles
