@@ -2,6 +2,10 @@
 
 [Orchard](http://www.orchardproject.net/) is a community driven content management system that allows users to rapidly create websites for the .NET platform. This module overrides the default authentication & authorization by using the currently logged in active directory user instead of requiring a user to authenticate using credentials.
 
+## How it works
+
+This [blog post](http://peterkeating.co.uk/active-directory-authorization-module-for-orchard/) contains more detail about why we built the module and how it works.
+
 ## Status
 
 Module has been released and is now [available from the Orchard Gallery](https://gallery.orchardproject.net/List/Modules/Orchard.Module.ActiveDirectoryAuthorization/1.0).
