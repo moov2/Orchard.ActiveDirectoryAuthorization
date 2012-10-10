@@ -1,10 +1,10 @@
 # Active Directory Authorization for Orchard
 
-[Orchard](http://www.orchardproject.net/) is a community driven content management system that allows users to rapidly create websites for the .NET platform.
+[Orchard](http://www.orchardproject.net/) is a community driven content management system that allows users to rapidly create websites for the .NET platform. This module overrides the default authentication & authorization by using the currently logged in active directory user instead of requiring a user to authenticate using credentials.
 
 ## Status
 
-Currently the module is under testing and a download will be provided soon. Feel free to download the source code and build the module yourself though if you want to use this module right now.
+Module has been released and is now [available from the Orchard Gallery](https://gallery.orchardproject.net/List/Modules/Orchard.Module.ActiveDirectoryAuthorization/1.0).
 
 ## Installation
 
@@ -12,9 +12,7 @@ In order to install the module follow the steps below.
 
 * Add any roles that your active directory users have that aren't currently in your Orchard instance. It is important that the name of the Orchard role matches the name of the role in your active directory.
 
-* Download the latest .nupkg from the downloads section of this repository.
-
-* Install the module into your instance of Orchard follow the instructions for [installing a module from your local computer](https://github.com/OrchardCMS/OrchardDoc/blob/master/Documentation/Installing-and-upgrading-modules.markdown#installing-a-module-from-your-local-computer)
+* In the modules section in the administration dashboard for your Orchard install search the gallery for "Active Directory Authorization" and then Download the module titled "Active Directory Authorization". Ensure that you have completed the first step of adding the roles before you enable the module otherwise you may lock yourself out of the administration dashboard.
 
 * Once the module is installed and enabled, you need to setup IIS to enable windows authentication.
 	To do this you should open IIS and navigate to your website. Select the "Authentication" option, then enable "Windows Authentication", and have the rest as disabled.
