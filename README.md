@@ -10,6 +10,16 @@ This [blog post](http://peterkeating.co.uk/active-directory-authorization-module
 
 Module has been released and is now [available from the Orchard Gallery](https://gallery.orchardproject.net/List/Modules/Orchard.Module.ActiveDirectoryAuthorization/1.0).
 
+## Versions
+
+### 1.1
+
+* Fixed bug with active directory users having multiple Orchard users created.
+
+### 1.0
+
+*Original Release.*
+
 ## Installation
 
 In order to install the module follow the steps below.
