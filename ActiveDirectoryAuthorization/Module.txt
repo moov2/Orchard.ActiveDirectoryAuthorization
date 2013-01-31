@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: Moov2
 Website: https://github.com/moov2/Orchard.ActiveDirectoryAuthorization
-Version: 1.0
-OrchardVersion: 1.5
+Version: 1.1
+OrchardVersion: 1.6
 Description: Overrides default authorization & authentication by using the currently logged in active directory user.
 Category: Security
 Features:

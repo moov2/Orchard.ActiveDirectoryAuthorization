@@ -24,6 +24,14 @@ namespace ActiveDirectoryAuthorization.Core
         private readonly INotifier _notifier;
         private readonly IContentManager _contentManager;
 
+        /**
+        * Flag indicating whether the AD User has been saved into the database yet. Because
+        * Orchard hits the Authorize method several times in a single HTTP request the newly
+        * created UserPart may have not been committed to the database thus it won't be returned
+        * when a query against the UserPart is performed.
+        */
+        private bool _attemptedToSaveUser = false;
+
         public Authorizer(IAuthorizationService authorizationService, INotifier notifier, IContentManager contentManager) 
         {
             _authorizationService = authorizationService;
@@ -84,8 +92,10 @@ namespace ActiveDirectoryAuthorization.Core
         {
             var user = GetUser(activeDirectoryUser.UserName);
 
-            if (user == null && !String.IsNullOrEmpty(activeDirectoryUser.UserName))
+            if (user == null && !String.IsNullOrEmpty(activeDirectoryUser.UserName) && !_attemptedToSaveUser)
                 CreateUser(new CreateUserParams(activeDirectoryUser.UserName, "password", String.Empty, String.Empty, String.Empty, true));
+
+            _attemptedToSaveUser = true;
         }
 
         /// <summary>
