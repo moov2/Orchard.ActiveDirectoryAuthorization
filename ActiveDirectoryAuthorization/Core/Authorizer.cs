@@ -17,7 +17,6 @@ namespace ActiveDirectoryAuthorization.Core
     [OrchardSuppressDependency("Orchard.Security.Authorizer")]
     public class Authorizer : IAuthorizer
     {
-        private const string AdminPanelAccess = "AccessAdminPanel";
         private const int Hashed = 1;
 
         private readonly IAuthorizationService _authorizationService;
@@ -67,11 +66,7 @@ namespace ActiveDirectoryAuthorization.Core
             // and the permissions that their associated roles have.
             if (_authorizationService.TryCheckAccess(permission, user, content))
             {
-                // if the user is attempting to access the admin area then they must have 
-                // a UserPartRecord associated to their username. 
-                if (permission.Name == AdminPanelAccess)
-                    CreateUserForActiveDirectoryUserIfNotExists(user);
-
+                CreateUserForActiveDirectoryUserIfNotExists(user);
                 return true;
             }
 
