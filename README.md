@@ -15,6 +15,9 @@ Module has been released and is now [available from the Orchard Gallery](https:/
 ### 1.1
 
 * Fixed bug with active directory users having multiple Orchard users created.
+* Active directory users have an orchard user created for them no matter what role they have, instead of only being created when the user has access to the Admin dashboard.
+
+*Not yet published to Orchard Gallery*
 
 ### 1.0
 
