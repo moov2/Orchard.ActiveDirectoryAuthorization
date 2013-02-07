@@ -100,7 +100,7 @@ namespace ActiveDirectoryAuthorization.Core
                     var ctx = new PrincipalContext(ContextType.Domain, domainAndUserName[0]);
                     var up = UserPrincipal.FindByIdentity(ctx, activeDirectoryUser.UserName);
 
-                    if (up != null)
+                    if (up != null && up.EmailAddress != null)
                         email = up.EmailAddress.ToLowerInvariant();
                 }
 
