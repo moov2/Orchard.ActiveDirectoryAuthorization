@@ -67,7 +67,9 @@ namespace ActiveDirectoryAuthorization.Core
             // and the permissions that their associated roles have.
             if (_authorizationService.TryCheckAccess(permission, user, content))
             {
-                CreateUserForActiveDirectoryUserIfNotExists(user);
+                if (!_attemptedToSaveUser)
+                    CreateUserForActiveDirectoryUserIfNotExists(user);
+
                 return true;
             }
 
@@ -88,7 +90,7 @@ namespace ActiveDirectoryAuthorization.Core
         {
             var user = GetUser(activeDirectoryUser.UserName);
 
-            if (user == null && !String.IsNullOrEmpty(activeDirectoryUser.UserName) && !_attemptedToSaveUser)
+            if (user == null && !String.IsNullOrEmpty(activeDirectoryUser.UserName))
             {
                 string[] domainAndUserName = activeDirectoryUser.UserName.Split('\\');
                 string email = "";
