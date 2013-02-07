@@ -11,6 +11,7 @@ using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.UI.Notify;
 using Orchard.Users.Models;
+using System.DirectoryServices.AccountManagement;
 
 namespace ActiveDirectoryAuthorization.Core
 {
@@ -90,7 +91,21 @@ namespace ActiveDirectoryAuthorization.Core
             var user = GetUser(activeDirectoryUser.UserName);
 
             if (user == null && !String.IsNullOrEmpty(activeDirectoryUser.UserName))
-                CreateUser(new CreateUserParams(activeDirectoryUser.UserName, "password", String.Empty, String.Empty, String.Empty, true));
+            {
+                var domainAndUserName = activeDirectoryUser.UserName.Split('\\');
+                var email = "";
+
+                if (domainAndUserName.Length == 2)
+                {
+                    var ctx = new PrincipalContext(ContextType.Domain, domainAndUserName[0]);
+                    var up = UserPrincipal.FindByIdentity(ctx, activeDirectoryUser.UserName);
+
+                    if (up != null && up.EmailAddress != null)
+                        email = up.EmailAddress.ToLowerInvariant();
+                }
+
+                CreateUser(new CreateUserParams(activeDirectoryUser.UserName, "password", email, String.Empty, String.Empty, true));
+            }
 
             _attemptedToSaveUser = true;
         }
