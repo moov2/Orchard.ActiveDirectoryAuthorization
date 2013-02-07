@@ -92,13 +92,13 @@ namespace ActiveDirectoryAuthorization.Core
 
             if (user == null && !String.IsNullOrEmpty(activeDirectoryUser.UserName))
             {
-                string[] domainAndUserName = activeDirectoryUser.UserName.Split('\\');
-                string email = "";
+                var domainAndUserName = activeDirectoryUser.UserName.Split('\\');
+                var email = "";
 
                 if (domainAndUserName.Length == 2)
                 {
-                    PrincipalContext ctx = new PrincipalContext(ContextType.Domain, domainAndUserName[0]);
-                    UserPrincipal up = UserPrincipal.FindByIdentity(ctx, activeDirectoryUser.UserName);
+                    var ctx = new PrincipalContext(ContextType.Domain, domainAndUserName[0]);
+                    var up = UserPrincipal.FindByIdentity(ctx, activeDirectoryUser.UserName);
 
                     if (up != null)
                         email = up.EmailAddress.ToLowerInvariant();
