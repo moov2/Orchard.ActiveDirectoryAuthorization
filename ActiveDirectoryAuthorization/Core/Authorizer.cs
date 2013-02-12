@@ -32,7 +32,7 @@ namespace ActiveDirectoryAuthorization.Core
         */
         private bool _attemptedToSaveUser = false;
 
-        public Authorizer(IAuthorizationService authorizationService, INotifier notifier, IContentManager contentManager) 
+        public Authorizer(IAuthorizationService authorizationService, INotifier notifier, IContentManager contentManager)
         {
             _authorizationService = authorizationService;
             _notifier = notifier;
@@ -43,12 +43,12 @@ namespace ActiveDirectoryAuthorization.Core
 
         public Localizer T { get; set; }
 
-        public bool Authorize(Permission permission) 
+        public bool Authorize(Permission permission)
         {
             return Authorize(permission, null, null);
         }
 
-        public bool Authorize(Permission permission, LocalizedString message) 
+        public bool Authorize(Permission permission, LocalizedString message)
         {
             return Authorize(permission, null, message);
         }
@@ -58,7 +58,7 @@ namespace ActiveDirectoryAuthorization.Core
             return Authorize(permission, content, null);
         }
 
-        public bool Authorize(Permission permission, IContent content, LocalizedString message) 
+        public bool Authorize(Permission permission, IContent content, LocalizedString message)
         {
             // gets the current active directory user.
             var user = new ActiveDirectoryUser();
@@ -67,7 +67,9 @@ namespace ActiveDirectoryAuthorization.Core
             // and the permissions that their associated roles have.
             if (_authorizationService.TryCheckAccess(permission, user, content))
             {
-                CreateUserForActiveDirectoryUserIfNotExists(user);
+                if (!_attemptedToSaveUser)
+                    CreateUserForActiveDirectoryUserIfNotExists(user);
+
                 return true;
             }
 
@@ -88,19 +90,21 @@ namespace ActiveDirectoryAuthorization.Core
         {
             var user = GetUser(activeDirectoryUser.UserName);
 
-            if (user == null && !String.IsNullOrEmpty(activeDirectoryUser.UserName) && !_attemptedToSaveUser)
+            if (user == null && !String.IsNullOrEmpty(activeDirectoryUser.UserName))
             {
-                string[] domainAndUserName = activeDirectoryUser.UserName.Split('\\');
-                string email = "";
+                var domainAndUserName = activeDirectoryUser.UserName.Split('\\');
+                var email = "";
+
                 if (domainAndUserName.Length == 2)
                 {
-                    PrincipalContext ctx = new PrincipalContext(ContextType.Domain, domainAndUserName[0]);
-                    UserPrincipal up = UserPrincipal.FindByIdentity(ctx, activeDirectoryUser.UserName);
+                    var ctx = new PrincipalContext(ContextType.Domain, domainAndUserName[0]);
+                    var up = UserPrincipal.FindByIdentity(ctx, activeDirectoryUser.UserName);
 
-                    if (up != null)
+                    if (up != null && up.EmailAddress != null)
                         email = up.EmailAddress.ToLowerInvariant();
                 }
-                CreateUser(new CreateUserParams(activeDirectoryUser.UserName, "password", String.Empty, String.Empty, String.Empty, true));
+
+                CreateUser(new CreateUserParams(activeDirectoryUser.UserName, "password", email, String.Empty, String.Empty, true));
             }
 
             _attemptedToSaveUser = true;
@@ -127,7 +131,7 @@ namespace ActiveDirectoryAuthorization.Core
         }
 
         /// <summary>
-        /// Attempts to get a UserPart that is associated to the 
+        /// Attempts to get a UserPart that is associated to the
         /// active directory username from the content manager.
         /// </summary>
         /// <param name="username">Username of the active directory user.</param>
