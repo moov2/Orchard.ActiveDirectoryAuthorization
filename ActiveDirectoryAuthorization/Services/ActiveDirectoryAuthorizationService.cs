@@ -11,6 +11,7 @@ using ActiveDirectoryAuthorization.Models;
 using Orchard.Roles.Services;
 using Orchard;
 using Orchard.Environment.Extensions;
+using Orchard.Users.Models;
 
 namespace ActiveDirectoryAuthorization.Services
 {
@@ -83,12 +84,21 @@ namespace ActiveDirectoryAuthorization.Services
                     }
                     else
                     {
-                        // the current user is not null, so get his roles and add "Authenticated" to it.
+                        //retreive the UserPart record for the user from the DB (if there is one)
+                        UserPart dbUser = null;
+                        if (!string.IsNullOrWhiteSpace(context.User.UserName))
+                        {
+                            dbUser = _contentManager.Query<UserPart, UserPartRecord>().Where(x => x.NormalizedUserName == context.User.UserName.ToLowerInvariant()).List().FirstOrDefault();
+                        }
 
                         // This line has been changed from the core implementation of IAuthorizationService,
                         // because our ActiveDirectoryUser implements the IUserRoles interface instead of having
                         // an UserRolesPart included on the content.
                         rolesToExamine = (context.User as IUserRoles).Roles;
+
+                        //Also adding all the Roles from the UserRolePart, incase We want to use role management that is not part of AD..
+                        if (dbUser != null && dbUser.As<IUserRoles>() != null && dbUser.As<IUserRoles>().Roles != null)
+                            rolesToExamine = rolesToExamine.Union(dbUser.As<IUserRoles>().Roles);
 
                         // when it is a simulated anonymous user in the admin
                         if (!rolesToExamine.Contains(AnonymousRole[0]))
