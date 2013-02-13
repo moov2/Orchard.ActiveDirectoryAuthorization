@@ -11,6 +11,7 @@ using ActiveDirectoryAuthorization.Models;
 using Orchard.Roles.Services;
 using Orchard;
 using Orchard.Environment.Extensions;
+using Orchard.Users.Models;
 
 namespace ActiveDirectoryAuthorization.Services
 {
@@ -19,16 +20,17 @@ namespace ActiveDirectoryAuthorization.Services
     {
         private readonly IRoleService _roleService;
         private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly IContentManager _contentManager;
         private readonly IAuthorizationServiceEventHandler _authorizationServiceEventHandler;
-        private readonly IMembershipService _membershipService;
 
         private static readonly string[] AnonymousRole = new[] { "Anonymous" };
         private static readonly string[] AuthenticatedRole = new[] { "Authenticated" };
 
-        public ActiveDirectoryRolesBasedAuthorizationService(IRoleService roleService, IWorkContextAccessor workContextAccessor, IAuthorizationServiceEventHandler authorizationServiceEventHandler)
+        public ActiveDirectoryRolesBasedAuthorizationService(IRoleService roleService, IWorkContextAccessor workContextAccessor, IAuthorizationServiceEventHandler authorizationServiceEventHandler, IContentManager contentManager)
         {
             _roleService = roleService;
             _workContextAccessor = workContextAccessor;
+            _contentManager = contentManager;
             _authorizationServiceEventHandler = authorizationServiceEventHandler;
 
             T = NullLocalizer.Instance;
@@ -83,12 +85,21 @@ namespace ActiveDirectoryAuthorization.Services
                     }
                     else
                     {
-                        // the current user is not null, so get his roles and add "Authenticated" to it.
+                        //retrieve the UserPart record for the user from the DB (if there is one)
+                        UserPart dbUser = null;
+                        if (!string.IsNullOrWhiteSpace(context.User.UserName))
+                        {
+                            dbUser = _contentManager.Query<UserPart, UserPartRecord>().Where(x => x.NormalizedUserName == context.User.UserName.ToLowerInvariant()).List().FirstOrDefault();
+                        }
 
                         // This line has been changed from the core implementation of IAuthorizationService,
                         // because our ActiveDirectoryUser implements the IUserRoles interface instead of having
                         // an UserRolesPart included on the content.
                         rolesToExamine = (context.User as IUserRoles).Roles;
+
+                        //Also adding all the Roles from the UserRolePart, incase We want to use role management that is not part of AD..
+                        if (dbUser != null && dbUser.As<IUserRoles>() != null && dbUser.As<IUserRoles>().Roles != null)
+                            rolesToExamine = rolesToExamine.Union(dbUser.As<IUserRoles>().Roles);
 
                         // when it is a simulated anonymous user in the admin
                         if (!rolesToExamine.Contains(AnonymousRole[0]))
@@ -96,7 +107,7 @@ namespace ActiveDirectoryAuthorization.Services
                             rolesToExamine = rolesToExamine.Concat(AuthenticatedRole);
                         }
                     }
-   
+
                     foreach (var role in rolesToExamine)
                     {
                         foreach (var permissionName in _roleService.GetPermissionsForRoleByName(role))
@@ -151,6 +162,5 @@ namespace ActiveDirectoryAuthorization.Services
 
             yield return StandardPermissions.SiteOwner.Name;
         }
-
     }
 }
