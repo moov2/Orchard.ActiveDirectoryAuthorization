@@ -22,7 +22,6 @@ namespace ActiveDirectoryAuthorization.Services
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IContentManager _contentManager;
         private readonly IAuthorizationServiceEventHandler _authorizationServiceEventHandler;
-        private readonly IMembershipService _membershipService;
 
         private static readonly string[] AnonymousRole = new[] { "Anonymous" };
         private static readonly string[] AuthenticatedRole = new[] { "Authenticated" };
