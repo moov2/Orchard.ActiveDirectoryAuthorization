@@ -20,16 +20,18 @@ namespace ActiveDirectoryAuthorization.Services
     {
         private readonly IRoleService _roleService;
         private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly IContentManager _contentManager;
         private readonly IAuthorizationServiceEventHandler _authorizationServiceEventHandler;
         private readonly IMembershipService _membershipService;
 
         private static readonly string[] AnonymousRole = new[] { "Anonymous" };
         private static readonly string[] AuthenticatedRole = new[] { "Authenticated" };
 
-        public ActiveDirectoryRolesBasedAuthorizationService(IRoleService roleService, IWorkContextAccessor workContextAccessor, IAuthorizationServiceEventHandler authorizationServiceEventHandler)
+        public ActiveDirectoryRolesBasedAuthorizationService(IRoleService roleService, IWorkContextAccessor workContextAccessor, IAuthorizationServiceEventHandler authorizationServiceEventHandler, IContentManager contentManager)
         {
             _roleService = roleService;
             _workContextAccessor = workContextAccessor;
+            _contentManager = contentManager;
             _authorizationServiceEventHandler = authorizationServiceEventHandler;
 
             T = NullLocalizer.Instance;
@@ -106,7 +108,7 @@ namespace ActiveDirectoryAuthorization.Services
                             rolesToExamine = rolesToExamine.Concat(AuthenticatedRole);
                         }
                     }
-   
+
                     foreach (var role in rolesToExamine)
                     {
                         foreach (var permissionName in _roleService.GetPermissionsForRoleByName(role))
@@ -161,6 +163,5 @@ namespace ActiveDirectoryAuthorization.Services
 
             yield return StandardPermissions.SiteOwner.Name;
         }
-
     }
 }
