@@ -85,7 +85,7 @@ namespace ActiveDirectoryAuthorization.Services
                     }
                     else
                     {
-                        //retreive the UserPart record for the user from the DB (if there is one)
+                        //retrieve the UserPart record for the user from the DB (if there is one)
                         UserPart dbUser = null;
                         if (!string.IsNullOrWhiteSpace(context.User.UserName))
                         {
