@@ -38,14 +38,18 @@ namespace ActiveDirectoryAuthorization.Services
         /// <returns></returns>
         public IUser GetAuthenticatedUser()
         {
-            // attempts to get the user from the UserPart data store.
-            var user = _membershipService.GetUser(HttpContext.Current.User.Identity.Name);
+			IUser user = null;
+			//I noticed thousands of errors in the log due to the Context being null, when indexing services are running.
+			if (HttpContext.Current != null)
+			{
+				// attempts to get the user from the UserPart data store.
+				var user = _membershipService.GetUser(HttpContext.Current.User.Identity.Name);
 
-            // if the user doesn't exist in the UserPart data store, then the
-            // current active directory user is returned instead.
-            if (user == null)
-                user = new ActiveDirectoryUser();
-
+				// if the user doesn't exist in the UserPart data store, then the
+				// current active directory user is returned instead.
+				if (user == null)
+					user = new ActiveDirectoryUser();
+			}
             return user;
         }
     }
