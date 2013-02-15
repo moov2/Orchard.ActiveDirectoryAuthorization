@@ -18,6 +18,7 @@ Module has been released and is now [available from the Orchard Gallery](https:/
 * Active directory users have an orchard user created for them no matter what role they have, instead of only being created when the user has access to the Admin dashboard.
 * Email address of the active directory user is saved on the Orchard user that is created.
 * Roles set on Orchard users in the administration area are now taken into account as well as AD user roles when checking user access to a permission.
+* Fixed bug with null reference exceptions occurring when the User on the context is null.
 
 *Not yet published to Orchard Gallery*
 
