@@ -38,6 +38,9 @@ namespace ActiveDirectoryAuthorization.Services
         /// <returns></returns>
         public IUser GetAuthenticatedUser()
         {
+            if (HttpContext.Current == null || HttpContext.Current.User == null)
+                return null;
+
             // attempts to get the user from the UserPart data store.
             var user = _membershipService.GetUser(HttpContext.Current.User.Identity.Name);
 
