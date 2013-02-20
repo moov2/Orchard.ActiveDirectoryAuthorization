@@ -88,10 +88,13 @@ namespace ActiveDirectoryAuthorization.Core
                 if (domainAndUserName.Length == 2)
                 {
                     var ctx = new PrincipalContext(ContextType.Domain, domainAndUserName[0]);
-                    var up = UserPrincipal.FindByIdentity(ctx, activeDirectoryUser.UserName);
 
-                    if (up != null && up.EmailAddress != null)
-                        email = up.EmailAddress.ToLowerInvariant();
+                    try {
+                        var up = UserPrincipal.FindByIdentity(ctx, activeDirectoryUser.UserName);
+
+                        if (up != null && up.EmailAddress != null)
+                            email = up.EmailAddress.ToLowerInvariant();
+                    } catch { }
                 }
 
                 CreateUser(new CreateUserParams(activeDirectoryUser.UserName, "password", email, String.Empty, String.Empty, true));
