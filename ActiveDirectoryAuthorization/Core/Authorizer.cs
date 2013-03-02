@@ -87,9 +87,9 @@ namespace ActiveDirectoryAuthorization.Core
 
                 if (domainAndUserName.Length == 2)
                 {
-                    var ctx = new PrincipalContext(ContextType.Domain, domainAndUserName[0]);
-
-                    try {
+                    try
+                    {
+                        var ctx = new PrincipalContext(ContextType.Domain, domainAndUserName[0]);
                         var up = UserPrincipal.FindByIdentity(ctx, activeDirectoryUser.UserName);
 
                         if (up != null && up.EmailAddress != null)
