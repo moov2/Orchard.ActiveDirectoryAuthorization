@@ -19,6 +19,7 @@ Module has been released and is now [available from the Orchard Gallery](https:/
 * Email address of the active directory user is saved on the Orchard user that is created.
 * Roles set on Orchard users in the administration area are now taken into account as well as AD user roles when checking user access to a permission.
 * Fixed bug with null reference exceptions occurring when the User on the context is null.
+* Fixed bug causing exception when the content item permission part is enabled on a content item.
 
 *Not yet published to Orchard Gallery*
 
