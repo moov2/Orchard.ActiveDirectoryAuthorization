@@ -52,16 +52,15 @@ namespace ActiveDirectoryAuthorization.Core
 
         public bool Authorize(Permission permission, IContent content, LocalizedString message)
         {
-            // gets the current active directory user.
-            var user = new ActiveDirectoryUser();
+            // creates a user for the active directory user if one doesn't already
+            // exist. If one does already exists then that user from the database
+            // is returned by the method.
+            var user = CreateUserForActiveDirectoryUserIfNotExists(new ActiveDirectoryUser());
 
             // attempts to authorize the active directory user based on their roles
             // and the permissions that their associated roles have.
             if (_authorizationService.TryCheckAccess(permission, user, content))
-            {
-                CreateUserForActiveDirectoryUserIfNotExists(user);
                 return true;
-            }
 
             if (message != null) {
                 _notifier.Error(T("{0}. Current user, {2}, does not have {1} permission.",
@@ -76,7 +75,9 @@ namespace ActiveDirectoryAuthorization.Core
         /// isn't then one is created with the username from the ActiveDirectoryUser.
         /// </summary>
         /// <param name="activeDirectoryUser">Currently logged in active directory user.</param>
-        private void CreateUserForActiveDirectoryUserIfNotExists(IUser activeDirectoryUser)
+        /// <returns>Returns the user that was created, or if one wasn't created then the
+        /// UserPart that is already in the database is returned.</returns>
+        private IUser CreateUserForActiveDirectoryUserIfNotExists(IUser activeDirectoryUser)
         {
             var user = GetUser(activeDirectoryUser.UserName);
 
@@ -97,8 +98,10 @@ namespace ActiveDirectoryAuthorization.Core
                     } catch { }
                 }
 
-                CreateUser(new CreateUserParams(activeDirectoryUser.UserName, "password", email, String.Empty, String.Empty, true));
+                user = CreateUser(new CreateUserParams(activeDirectoryUser.UserName, "password", email, String.Empty, String.Empty, true));
             }
+
+            return user;
         }
 
         /// <summary>
@@ -106,7 +109,8 @@ namespace ActiveDirectoryAuthorization.Core
         /// username to allow the user to use the core Orchard functionality.
         /// </summary>
         /// <param name="createUserParams"></param>
-        private void CreateUser(CreateUserParams createUserParams)
+        /// <returns>The user object that was saved to the database.</returns>
+        private IUser CreateUser(CreateUserParams createUserParams)
         {
             var user = _contentManager.New<UserPart>("User");
 
@@ -122,6 +126,8 @@ namespace ActiveDirectoryAuthorization.Core
 
             // Flush the session now so any calls to authentication service is able to pick up the new user.
             _contentManager.Flush();
+
+            return user;
         }
 
         /// <summary>
