@@ -12,6 +12,10 @@ using Orchard.Security.Permissions;
 using Orchard.UI.Notify;
 using Orchard.Users.Models;
 using System.DirectoryServices.AccountManagement;
+using Orchard.Roles.Services;
+using System.Collections.Generic;
+using Orchard.Roles.Models;
+using Orchard.Data;
 
 namespace ActiveDirectoryAuthorization.Core
 {
@@ -23,12 +27,16 @@ namespace ActiveDirectoryAuthorization.Core
         private readonly IAuthorizationService _authorizationService;
         private readonly INotifier _notifier;
         private readonly IContentManager _contentManager;
+        private readonly IRoleService _roleService;
+        private readonly IRepository<UserRolesPartRecord> _userRolesRepository;
 
-        public Authorizer(IAuthorizationService authorizationService, INotifier notifier, IContentManager contentManager)
+        public Authorizer(IAuthorizationService authorizationService, INotifier notifier, IContentManager contentManager, IRoleService roleService, IRepository<UserRolesPartRecord> userRolesRepository)
         {
             _authorizationService = authorizationService;
             _notifier = notifier;
             _contentManager = contentManager;
+            _roleService = roleService;
+            _userRolesRepository = userRolesRepository;
 
             T = NullLocalizer.Instance;
         }
@@ -71,34 +79,42 @@ namespace ActiveDirectoryAuthorization.Core
         }
 
         /// <summary>
-        /// Does a check to see if there is a UserPart for the active directory user. If there
-        /// isn't then one is created with the username from the ActiveDirectoryUser.
+        /// Loops through the active directory user roles, if the role is an
+        /// orchard role then the user is assigned to that role.
+        /// </summary>
+        /// <param name="user">Orchard User who will have the roles set for them.</param>
+        /// <param name="activeDirectoryRoles">Currently logged in active directory user roles.</param>
+        private void CreateUserRoles(IUser user, IList<string> activeDirectoryRoles)
+        {
+            var availableRoles = _roleService.GetRoles();
+
+            // loops through the active directory roles trying to match to an
+            // orchard role, if one is found then the user is assigned to that
+            // role.
+            foreach (var activeDirectoryRole in activeDirectoryRoles)
+            {
+                var orchardRole = availableRoles.Where(x => x.Name.ToLower() == activeDirectoryRole.ToLower()).SingleOrDefault();
+
+                if (orchardRole != null)
+                    _userRolesRepository.Create(new UserRolesPartRecord { Role = orchardRole, UserId = user.Id });
+            }
+        }
+
+        /// <summary>
+        /// Does a check to see if there is an Orchard user that represents the active directory user.
+        /// If there isn't then one is created with the username from the active directory user.
         /// </summary>
         /// <param name="activeDirectoryUser">Currently logged in active directory user.</param>
         /// <returns>Returns the user that was created, or if one wasn't created then the
         /// UserPart that is already in the database is returned.</returns>
-        private IUser CreateUserForActiveDirectoryUserIfNotExists(IUser activeDirectoryUser)
+        private IUser CreateUserForActiveDirectoryUserIfNotExists(ActiveDirectoryUser activeDirectoryUser)
         {
             var user = GetUser(activeDirectoryUser.UserName);
 
             if (user == null && !String.IsNullOrEmpty(activeDirectoryUser.UserName))
             {
-                var domainAndUserName = activeDirectoryUser.UserName.Split('\\');
-                var email = "";
-
-                if (domainAndUserName.Length == 2)
-                {
-                    try
-                    {
-                        var ctx = new PrincipalContext(ContextType.Domain, domainAndUserName[0]);
-                        var up = UserPrincipal.FindByIdentity(ctx, activeDirectoryUser.UserName);
-
-                        if (up != null && up.EmailAddress != null)
-                            email = up.EmailAddress.ToLowerInvariant();
-                    } catch { }
-                }
-
-                user = CreateUser(new CreateUserParams(activeDirectoryUser.UserName, "password", email, String.Empty, String.Empty, true));
+                user = CreateUser(new CreateUserParams(activeDirectoryUser.UserName, "password", GetEmail(activeDirectoryUser), String.Empty, String.Empty, true));
+                CreateUserRoles(user, activeDirectoryUser.Roles);
             }
 
             return user;
@@ -128,6 +144,34 @@ namespace ActiveDirectoryAuthorization.Core
             _contentManager.Flush();
 
             return user;
+        }
+
+        /// <summary>
+        /// Makes an attempt to communicate with LDAP to retrieve the email
+        /// of the active directory user.
+        /// </summary>
+        /// <param name="activeDiretoryUser">Currently logged in active directory user.</param>
+        /// <returns>Email address of active directory user if connection can be
+        /// made to LDAP, otherwise an empty string is returned.</returns>
+        private string GetEmail(ActiveDirectoryUser activeDirectoryUser)
+        {
+            var domainAndUserName = activeDirectoryUser.UserName.Split('\\');
+            var email = "";
+
+            if (domainAndUserName.Length == 2)
+            {
+                try
+                {
+                    var ctx = new PrincipalContext(ContextType.Domain, domainAndUserName[0]);
+                    var up = UserPrincipal.FindByIdentity(ctx, activeDirectoryUser.UserName);
+
+                    if (up != null && up.EmailAddress != null)
+                        email = up.EmailAddress.ToLowerInvariant();
+                }
+                catch { }
+            }
+
+            return email;
         }
 
         /// <summary>
