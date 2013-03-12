@@ -20,6 +20,7 @@ Module has been released and is now [available from the Orchard Gallery](https:/
 * Roles set on Orchard users in the administration area are now taken into account as well as AD user roles when checking user access to a permission.
 * Fixed bug with null reference exceptions occurring when the User on the context is null.
 * Fixed bug causing exception when the content item permission part is enabled on a content item.
+* Active directory user roles are checked against orchard roles, any matched roles are assigned to the orchard user that is created on active directory user's first visit.
 
 *Not yet published to Orchard Gallery*
 
