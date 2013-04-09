@@ -22,11 +22,13 @@ Module has been released and is now [available from the Orchard Gallery](https:/
 * Fixed bug causing exception when the content item permission part is enabled on a content item.
 * Active directory user roles are checked against orchard roles, any matched roles are assigned to the orchard user that is created on active directory user's first visit.
 
-*Not yet published to Orchard Gallery*
+[Published on 3rd April 2013](http://gallery.orchardproject.net/List/Modules/Orchard.Module.ActiveDirectoryAuthorization/1.1)
 
 ### 1.0
 
 *Original Release.*
+
+[Published on 17th October 2012](http://gallery.orchardproject.net/List/Modules/Orchard.Module.ActiveDirectoryAuthorization/1.0)
 
 ## Installation
 
