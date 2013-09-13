@@ -140,9 +140,6 @@ namespace ActiveDirectoryAuthorization.Core
 
             _contentManager.Create(user);
 
-            // Flush the session now so any calls to authentication service is able to pick up the new user.
-            _contentManager.Flush();
-
             return user;
         }
 
