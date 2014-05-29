@@ -2,15 +2,16 @@
 using ActiveDirectoryAuthorization.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Security;
+using Orchard.Environment;
 
 namespace ActiveDirectoryAuthorization.Services
 {
     [OrchardSuppressDependency("Orchard.Security.Providers.FormsAuthenticationService")]
     public class ActiveDirectoryAuthenticationService : IAuthenticationService
     {
-        private readonly IMembershipService _membershipService;
+        private readonly Work<IMembershipService> _membershipService;
 
-        public ActiveDirectoryAuthenticationService(IMembershipService membershipService)
+        public ActiveDirectoryAuthenticationService(Work<IMembershipService> membershipService)
         {
             _membershipService = membershipService;
         }
@@ -42,7 +43,7 @@ namespace ActiveDirectoryAuthorization.Services
                 return null;
 
             // attempts to get the user from the UserPart data store.
-            var user = _membershipService.GetUser(HttpContext.Current.User.Identity.Name);
+            var user = _membershipService.Value.GetUser(HttpContext.Current.User.Identity.Name);
 
             // if the user doesn't exist in the UserPart data store, then the
             // current active directory user is returned instead.
