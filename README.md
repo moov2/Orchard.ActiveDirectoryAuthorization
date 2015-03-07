@@ -12,6 +12,14 @@ Module has been released and is now [available from the Orchard Gallery](https:/
 
 ## Versions
 
+### 1.2
+
+* Fixed stack overflow exception caused by dependency to `IMembershipService`.
+* Updated project to target .NET 4.5.
+* Removed call to the method that has been removed (`ContentManager.Flush`).
+
+[Published on 7th March 2015](http://gallery.orchardproject.net/List/Modules/Orchard.Module.ActiveDirectoryAuthorization/1.2)
+
 ### 1.1
 
 * Fixed bug with active directory users having multiple Orchard users created.
