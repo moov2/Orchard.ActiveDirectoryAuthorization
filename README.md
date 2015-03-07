@@ -8,7 +8,7 @@ This [blog post](http://peterkeating.co.uk/active-directory-authorization-module
 
 ## Status
 
-Module has been released and is now [available from the Orchard Gallery](https://gallery.orchardproject.net/List/Modules/Orchard.Module.ActiveDirectoryAuthorization).
+An update (v1.2) is now [available from the Orchard Gallery](https://gallery.orchardproject.net/List/Modules/Orchard.Module.ActiveDirectoryAuthorization) to solve issues with Orchard 1.8.x.
 
 ## Versions
 
