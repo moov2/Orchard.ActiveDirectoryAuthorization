@@ -8,7 +8,7 @@ This [blog post](http://peterkeating.co.uk/active-directory-authorization-module
 
 ## Status
 
-Module has been released and is now [available from the Orchard Gallery](https://gallery.orchardproject.net/List/Modules/Orchard.Module.ActiveDirectoryAuthorization/1.0).
+Module has been released and is now [available from the Orchard Gallery](https://gallery.orchardproject.net/List/Modules/Orchard.Module.ActiveDirectoryAuthorization).
 
 ## Versions
 
@@ -47,5 +47,3 @@ In order to install the module follow the steps below.
 	<pre><code>&lt;authentication mode="Windows" /&gt;
 	&lt;roleManager enabled="true" defaultProvider="AspNetWindowsTokenRoleProvider"/&gt;
 	</code></pre>
-
-
