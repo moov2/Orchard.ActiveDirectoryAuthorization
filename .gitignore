@@ -11,3 +11,5 @@
 *.user
 *.suo
 *.sln
+
+*.TMP
