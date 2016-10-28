@@ -18,6 +18,8 @@ An update (v1.2) is now [available from the Orchard Gallery](https://gallery.orc
 * Compatible as a git submodule.
 * Compatible with Orchard v1.10.x.
 
+[Published on 28th October 2016](https://gallery.orchardproject.net/Packages/Orchard.Module.ActiveDirectoryAuthorization/1.3)
+
 ### 1.2
 
 * Fixed stack overflow exception caused by dependency to `IMembershipService`.
