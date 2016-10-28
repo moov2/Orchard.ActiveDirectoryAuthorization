@@ -12,6 +12,12 @@ An update (v1.2) is now [available from the Orchard Gallery](https://gallery.orc
 
 ## Versions
 
+### 1.3.
+
+* Reduce needless database hits by storing user as private variable.
+* Compatible as a git submodule.
+* Compatible with Orchard v1.10.x.
+
 ### 1.2
 
 * Fixed stack overflow exception caused by dependency to `IMembershipService`.
