@@ -10,6 +10,7 @@ namespace ActiveDirectoryAuthorization.Services
     public class ActiveDirectoryAuthenticationService : IAuthenticationService
     {
         private readonly Work<IMembershipService> _membershipService;
+        private IUser _authenticatedUser;
 
         public ActiveDirectoryAuthenticationService(Work<IMembershipService> membershipService)
         {
@@ -41,16 +42,17 @@ namespace ActiveDirectoryAuthorization.Services
         {
             if (HttpContext.Current == null || HttpContext.Current.User == null)
                 return null;
+            
+            // attempts to get the user from the UserPart data store if it wasn't previously set.
+            if (_authenticatedUser == null)
+                _authenticatedUser = _membershipService.Value.GetUser(HttpContext.Current.User.Identity.Name);
 
-            // attempts to get the user from the UserPart data store.
-            var user = _membershipService.Value.GetUser(HttpContext.Current.User.Identity.Name);
-
-            // if the user doesn't exist in the UserPart data store, then the
+            // if the user wasn't previously set, and doesn't exist in the UserPart data store, then the
             // current active directory user is returned instead.
-            if (user == null)
-                user = new ActiveDirectoryUser();
-
-            return user;
+            if (_authenticatedUser == null)
+                return new ActiveDirectoryUser();
+            // return previously set user, or the user fetched from the data store.
+            return _authenticatedUser;
         }
     }
 }
