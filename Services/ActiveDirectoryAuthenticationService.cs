@@ -40,7 +40,7 @@ namespace ActiveDirectoryAuthorization.Services
         /// <returns></returns>
         public IUser GetAuthenticatedUser()
         {
-            if (HttpContext.Current == null || HttpContext.Current.User == null)
+            if (HttpContext.Current == null || HttpContext.Current.User == null || !HttpContext.Current.User.Identity.IsAuthenticated)
                 return null;
             
             // attempts to get the user from the UserPart data store if it wasn't previously set.

@@ -46,7 +46,10 @@ namespace ActiveDirectoryAuthorization.Models
             _username = HttpContext.Current.User.Identity.Name;
 
             // gets the current roles for the current user logged in for this context.
-            try { _roles = System.Web.Security.Roles.GetRolesForUser(_username).ToList(); } catch { _roles = new List<string>(); }
+            if (System.Web.Security.Roles.Enabled)
+                try { _roles = System.Web.Security.Roles.GetRolesForUser(_username).ToList(); } catch { _roles = new List<string>(); }
+            else
+                _roles = new List<string>();
         }
     }
 }
